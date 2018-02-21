@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TagReader</string>
+    <string name="menu_add">Add</string>
+    <string name="button_save">Save</string>
+    <string name="add_hint">Tag with #</string>
+    <string name="error_input_invalid">Typed tag is invalid</string>
+    <string name="error_tag_exists">Typed tag already exists</string>
+</resources>
