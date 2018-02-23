@@ -18,6 +18,8 @@ data class Item(
     var isLoaded = false
 
     fun isDifferent() = difference > 0
-    fun information() = "$difference / $itemsCount"
+    fun information() = "%,d / %,d"
+            .format(difference,  itemsCount)
+            .replace(',', ' ')
 
 }
