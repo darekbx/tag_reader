@@ -52,8 +52,8 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
             .map { counters ->
                 with(item) {
                     isLoaded = true
-                    difference = counters.total - itemsCount
-                    itemsCount = counters.total
+                    difference = counters.entries - itemsCount
+                    itemsCount = counters.entries
                 }
             }
             .map { item }
