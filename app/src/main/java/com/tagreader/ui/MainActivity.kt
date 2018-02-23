@@ -2,12 +2,15 @@ package com.tagreader.ui
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.widget.ListView
 import android.widget.Toast
 import com.tagreader.R
+import com.tagreader.repository.storage.entities.Item
 import com.tagreader.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -24,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var viewModel: MainViewModel
+    private val urlFormat = "https://www.wykop.pl/tag/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +39,48 @@ class MainActivity : AppCompatActivity() {
         with(viewModel) {
             itemList.observe(this@MainActivity, Observer { itemList ->
                 itemList?.let { itemList ->
-
+                    loadList(itemList)
                 }
             })
+            refresher.observe(this@MainActivity, Observer { refresh() })
             errorMessage.observe(this@MainActivity, Observer { message ->
                 Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
             })
             loadStoredTags()
+        }
+
+        setListActions()
+    }
+
+    private fun setListActions() {
+        listView.setOnItemLongClickListener { adapterView, view, i, l ->
+            viewModel.delete(itemsAdapter.getItem(i))
+            false
+        }
+        listView.setOnItemClickListener { adapterView, view, i, l -> openBrowser(i) }
+    }
+
+    private fun openBrowser(i: Int) {
+        val item = itemsAdapter.getItem(i)
+        val intent = Intent(Intent.ACTION_VIEW).apply { data = createTagUri(item) }
+        startActivity(intent)
+    }
+
+    private fun createTagUri(item: Item) =
+            Uri.parse(urlFormat + item.tagName)
+
+    fun refresh() {
+        itemsAdapter.notifyDataSetInvalidated()
+    }
+
+    fun loadList(items: List<Item>) {
+        if (listView.adapter == null) {
+            listView.adapter = itemsAdapter
+        }
+        with (itemsAdapter) {
+            clear()
+            addAll(items)
+            notifyDataSetChanged()
         }
     }
 
@@ -60,4 +99,7 @@ class MainActivity : AppCompatActivity() {
     fun addTag(tag: String) {
         viewModel.addtag(tag)
     }
+
+    private val itemsAdapter by lazy { ItemsAdapter(this) }
+    private val listView by lazy { findViewById(R.id.list) as ListView }
 }

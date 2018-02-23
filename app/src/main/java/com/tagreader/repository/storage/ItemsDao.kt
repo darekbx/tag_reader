@@ -1,9 +1,6 @@
 package com.tagreader.repository.storage
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Delete
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import com.tagreader.repository.storage.entities.Item
 
 @Dao
@@ -14,6 +11,9 @@ interface ItemsDao {
 
     @Query("SELECT COUNT(id) FROM item WHERE tagname = :tag")
     fun countOccurrences(tag: String) : Int
+
+    @Update
+    fun update(item: Item)
 
     @Insert
     fun add(item: Item): Long

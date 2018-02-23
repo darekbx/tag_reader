@@ -43,10 +43,9 @@ class AddDialog: DialogFragment() {
     }
 
     private fun validate(): Boolean {
-        val text = inputText.text.toString();
+        val text = inputText.text.toString()
         return when {
             TextUtils.isEmpty(text) -> false
-            text.indexOf('#') != 0 -> false
             else -> true
         }
     }

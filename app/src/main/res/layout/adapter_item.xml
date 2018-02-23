@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="item" type="com.tagreader.repository.storage.entities.Item" />
+    </data>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="@{`#` + item.tagName}"
+            android:textSize="16dp"
+            android:textColor="#000"
+            android:layout_marginLeft="12dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:text="@{item.isLoaded ? item.information() : @string/loading_count}"
+            android:textSize="12dp"
+            android:textColor="#000"
+            android:textStyle="@{item.isDifferent() ? `bold` : `normal` }"
+            android:layout_marginRight="12dp"
+            />
+
+    </FrameLayout>
+</layout>
