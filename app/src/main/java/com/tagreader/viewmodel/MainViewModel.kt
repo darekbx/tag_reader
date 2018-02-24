@@ -10,13 +10,19 @@ import com.tagreader.repository.storage.entities.Item
 import io.reactivex.Observable
 import io.reactivex.Single
 
+class ActionLiveData : MutableLiveData<Double>() {
+    fun invokeAction() {
+        value = Math.random()
+    }
+}
+
 class MainViewModel(application: Application): AndroidViewModel(application) {
 
     class ExistsException : Exception()
 
     var itemList = MutableLiveData<List<Item>>()
     val errorMessage = MutableLiveData<String>()
-    val refresher = MutableLiveData<Int>()
+    val refresher = ActionLiveData()
 
     fun loadStoredTags() {
         Single
@@ -35,7 +41,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
                 .flatMap { executeTag(it) }
                 .threadToAndroid()
                 .subscribe(
-                        { item -> refresher.value = item.id },
+                        { item -> refresher.invokeAction() },
                         { e ->
                             when {
                                 e is ExistsException -> errorMessage.value = "Tag already exists"
