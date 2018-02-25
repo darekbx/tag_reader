@@ -13,6 +13,14 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+            storeFile file(rootProject.getProjectDir().absolutePath + '/cosmose_debug.keystore')
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false

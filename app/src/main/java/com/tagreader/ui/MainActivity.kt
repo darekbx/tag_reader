@@ -57,11 +57,16 @@ class MainActivity : AppCompatActivity() {
             viewModel.delete(itemsAdapter.getItem(i))
             false
         }
-        listView.setOnItemClickListener { adapterView, view, i, l -> openBrowser(i) }
+        listView.setOnItemClickListener { adapterView, view, i, l -> handleClick(i) }
     }
 
-    private fun openBrowser(i: Int) {
+    private fun handleClick(i: Int) {
         val item = itemsAdapter.getItem(i)
+        viewModel.updateOpened(item)
+        openBrowser(item)
+    }
+
+    private fun openBrowser(item: Item) {
         val intent = Intent(Intent.ACTION_VIEW).apply { data = createTagUri(item) }
         startActivity(intent)
     }

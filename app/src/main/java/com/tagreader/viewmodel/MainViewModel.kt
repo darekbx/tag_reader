@@ -4,17 +4,13 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import com.tagreader.api.WykopService
+import com.tagreader.extensions.ActionLiveData
 import com.tagreader.extensions.threadToAndroid
 import com.tagreader.repository.storage.ItemsDatabase
 import com.tagreader.repository.storage.entities.Item
 import io.reactivex.Observable
 import io.reactivex.Single
 
-class ActionLiveData : MutableLiveData<Double>() {
-    fun invokeAction() {
-        value = Math.random()
-    }
-}
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
 
@@ -31,7 +27,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
                 .subscribe({ items ->
                     itemList.value = items
                     fetchCounters()
-                }, { e -> errorMessage.postValue(e.message) })
+                }, { e -> showError(e) })
     }
 
     fun fetchCounters() {
@@ -42,28 +38,34 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
                 .threadToAndroid()
                 .subscribe(
                         { item -> refresher.invokeAction() },
-                        { e ->
-                            when {
-                                e is ExistsException -> errorMessage.value = "Tag already exists"
-                                else -> errorMessage.value = e.message
-                            }
-                        })
+                        { e -> showError(e) })
     }
 
-    fun executeTag(item: Item) = Observable
-            .fromCallable { service.getTag(item.tagName, 0, WykopService.API_KEY) }
-            .map { it.execute() }
-            .map { it.body() ?: throw IllegalStateException() }
-            .map { wrapper -> wrapper.meta.counters }
-            .map { counters ->
-                with(item) {
-                    isLoaded = true
-                    difference = counters.entries - itemsCount
-                    itemsCount = counters.entries
-                }
-            }
-            .map { item }
-            .doOnNext { itemsDao.update(item) }
+    fun updateOpened(item: Item) {
+        Single
+                .fromCallable { itemsDao.update(item) }
+                .threadToAndroid()
+                .subscribe({ }, { e -> showError(e) })
+    }
+
+    fun showError(e: Throwable) {
+        errorMessage.postValue(e.message)
+    }
+
+    fun executeTag(item: Item) =
+            Observable
+                    .fromCallable { service.getTag(item.tagName, 0, WykopService.API_KEY) }
+                    .map { it.execute() }
+                    .map { it.body() ?: throw IllegalStateException() }
+                    .map { wrapper -> wrapper.meta.counters }
+                    .map { counters ->
+                        with(item) {
+                            isLoaded = true
+                            difference = counters.entries - itemsCount
+                            itemsCount = counters.entries
+                        }
+                    }
+                    .map { item }
 
     fun addtag(tag: String) {
         Single
@@ -74,7 +76,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
                 .subscribe({ value -> loadStoredTags() }, { e ->
                     when {
                         e is ExistsException -> errorMessage.value = "Tag already exists"
-                        else -> errorMessage.value = e.message
+                        else -> showError(e)
                     }
                 })
     }
