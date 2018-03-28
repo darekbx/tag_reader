@@ -3,7 +3,7 @@ package com.tagreader.api
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class WykopService {
 
@@ -25,7 +25,7 @@ class WykopService {
             Retrofit.Builder()
                     .baseUrl(END_POINT)
                     .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(ScalarsConverterFactory.create())
                     .build()
 
     private fun buildClient(): OkHttpClient {

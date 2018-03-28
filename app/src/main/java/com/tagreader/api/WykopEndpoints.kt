@@ -1,6 +1,5 @@
 package com.tagreader.api
 
-import com.tagreader.model.TagWrapper
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -11,5 +10,5 @@ interface WykopEndpoints {
     fun getTag(
             @Path("tag") tag: String,
             @Path("page") page: Int,
-            @Path("appKey") appKey: String): Call<TagWrapper>
+            @Path("appKey") appKey: String): Call<String>
 }

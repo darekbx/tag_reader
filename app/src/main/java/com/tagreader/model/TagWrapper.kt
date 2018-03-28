@@ -1,3 +1,3 @@
 package com.tagreader.model
 
-data class TagWrapper(val meta: Meta, val entries: Array<Entry>)
+data class TagWrapper(val meta: Meta, val items: Array<Entry>)

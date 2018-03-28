@@ -1,25 +1,14 @@
-package com.tagreader.ui
+package com.tagreader.ui.main
 
 import android.content.Context
-import android.databinding.BindingAdapter
 import android.databinding.DataBindingUtil
-import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import com.tagreader.R
 import com.tagreader.databinding.AdapterItemBinding
 import com.tagreader.repository.storage.entities.Item
-
-@BindingAdapter("android:textStyle")
-fun setTextStyle(view: TextView, style:String) {
-    when (style) {
-        "bold" -> view.typeface = Typeface.DEFAULT_BOLD
-        else -> view.typeface = Typeface.DEFAULT
-    }
-}
 
 class ItemsAdapter(context: Context) : ArrayAdapter<Item>(context, R.layout.adapter_item) {
 
@@ -34,6 +23,4 @@ class ItemsAdapter(context: Context) : ArrayAdapter<Item>(context, R.layout.adap
     private val layoutInflater by lazy {
         LayoutInflater.from(context)
     }
-
-
 }

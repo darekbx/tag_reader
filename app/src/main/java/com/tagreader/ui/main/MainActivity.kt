@@ -1,9 +1,8 @@
-package com.tagreader.ui
+package com.tagreader.ui.main
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
@@ -11,6 +10,7 @@ import android.widget.ListView
 import android.widget.Toast
 import com.tagreader.R
 import com.tagreader.repository.storage.entities.Item
+import com.tagreader.ui.details.DetailsActivity
 import com.tagreader.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var viewModel: MainViewModel
-    private val urlFormat = "https://www.wykop.pl/tag/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +47,6 @@ class MainActivity : AppCompatActivity() {
             })
             loadStoredTags()
         }
-
         setListActions()
     }
 
@@ -63,16 +61,10 @@ class MainActivity : AppCompatActivity() {
     private fun handleClick(i: Int) {
         val item = itemsAdapter.getItem(i)
         viewModel.updateOpened(item)
-        openBrowser(item)
+        startActivity(Intent(this, DetailsActivity::class.java).apply {
+            putExtra(DetailsActivity.TAG_NAME_KEY, item.tagName)
+        })
     }
-
-    private fun openBrowser(item: Item) {
-        val intent = Intent(Intent.ACTION_VIEW).apply { data = createTagUri(item) }
-        startActivity(intent)
-    }
-
-    private fun createTagUri(item: Item) =
-            Uri.parse(urlFormat + item.tagName)
 
     fun refresh() {
         itemsAdapter.notifyDataSetInvalidated()

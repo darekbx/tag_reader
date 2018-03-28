@@ -1,4 +1,4 @@
-package com.tagreader.ui
+package com.tagreader.ui.main
 
 import android.app.DialogFragment
 import android.os.Bundle
@@ -12,10 +12,6 @@ import com.tagreader.R
 import kotlinx.android.synthetic.main.dialog_add.*
 
 class AddDialog: DialogFragment() {
-
-    interface Callback {
-        fun onResult(tag: String)
-    }
 
     private lateinit var callback: (String) -> Unit
 

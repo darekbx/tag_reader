@@ -23,19 +23,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
-            android:text="@{item.information()}"
+            android:text="@{item.isLoaded ? item.information() : @string/loading_count}"
             android:textSize="12dp"
             android:textColor="#000"
             android:textStyle="@{item.isDifferent() ? `bold` : `normal` }"
             android:layout_marginRight="12dp"
-            android:visibility="@{item.isLoaded ? View.VISIBLE : View.GONE}"
-            />
-        <com.tagreader.PacManProgress
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginRight="12dp"
-            android:layout_gravity="right|center_vertical"
-            android:visibility="@{item.isLoaded ? View.GONE : View.VISIBLE}"
             />
 
     </FrameLayout>

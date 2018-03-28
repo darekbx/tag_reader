@@ -6,14 +6,13 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tagreader.ui.MainActivity">
+    tools:context="com.tagreader.ui.main.MainActivity">
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
-
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
